@@ -88,6 +88,9 @@ init(Handle<Object> target)
   NODE_SET_METHOD(TTF, "init", sdl::TTF::Init);
   NODE_SET_METHOD(TTF, "openFont", sdl::TTF::OpenFont);
   NODE_SET_METHOD(TTF, "renderTextBlended", sdl::TTF::RenderTextBlended);
+  NODE_SET_METHOD(TTF, "fontHeight", sdl::TTF::FontHeight);
+  NODE_SET_METHOD(TTF, "sizeUTF8", sdl::TTF::SizeUTF8);
+
 
   Local<Object> IMG = Object::New();
   target->Set(String::New("IMG"), IMG);
@@ -936,6 +939,33 @@ static Handle<Value> sdl::TTF::RenderTextBlended(const Arguments& args) {
     )));
   }
   return scope.Close(WrapSurface(resulting_text));
+}
+
+static Handle<Value> sdl::TTF::FontHeight(const Arguments& args) {
+  HandleScope scope;    
+
+  if (!(args.Length() == 1)) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected FontHeight(Font)")));
+  }
+
+  TTF_Font* font = UnwrapFont(args[0]->ToObject());
+  return Number::New(TTF_FontHeight(font));
+}
+
+static Handle<Value> sdl::TTF::SizeUTF8(const Arguments& args) {
+  HandleScope scope;    
+
+  if (!(args.Length() == 2)) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected SizeUTF8(Font,String)")));
+  }
+
+
+  TTF_Font* font = UnwrapFont(args[0]->ToObject());
+  String::Utf8Value text(args[1]);
+  int w, h;
+  
+  int retval = TTF_SizeUTF8(font,*text,&w,&h);
+  return Number::New(w);
 }
 
 // TODO: make an async version so this can be used in loops or parallel load images

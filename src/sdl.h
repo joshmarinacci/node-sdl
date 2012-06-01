@@ -57,6 +57,8 @@ namespace sdl {
     static Handle<Value> Init(const Arguments& args);
     static Handle<Value> OpenFont(const Arguments& args);
     static Handle<Value> RenderTextBlended(const Arguments& args);
+    static Handle<Value> FontHeight(const Arguments& args);
+    static Handle<Value> SizeUTF8(const Arguments& args);
   }
 
   namespace IMG {
